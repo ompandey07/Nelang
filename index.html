@@ -1,515 +1,1578 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeLang - Nepali Programming Language</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>NeLang — Nepali Programming Language</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="NavLogo.png" type="image/x-icon">
     <style>
-        body { font-family: 'Inter', sans-serif; color: #111827; }
-        code, pre { font-family: 'Fira Code', monospace; }
-        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
-        .sidebar-scroll::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
-        section { scroll-margin-top: 80px; }
-        .nav-active { color: #0284c7 !important; font-weight: 600 !important; }
-    </style>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            900: '#0c4a6e',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-<body class="bg-white">
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-<!-- Navbar -->
-<nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-gray-200 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16 items-center">
-      <div class="flex items-center gap-3">
-        <img src="Logo.png" alt="NeLang Logo" class="h-8 w-8 object-contain">
-      </div>
-      <div class="hidden md:flex space-x-8">
-        <a href="#hero" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Home</a>
-        <a href="#about" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Docs</a>
-        <a href="#syntax" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Syntax</a>
-        <a href="#examples" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Examples</a>
-        <a href="#cli" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">CLI</a>
-        <a href="https://github.com/ompandey07/Nelang" target="_blank" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition flex items-center gap-1.5">
-          <i data-lucide="github" class="w-4 h-4"></i> GitHub
+        :root {
+            --bg: #0a0a0f;
+            --bg2: #111118;
+            --bg3: #1a1a25;
+            --bg4: #22222f;
+            --border: rgba(255,255,255,0.07);
+            --border2: rgba(255,255,255,0.12);
+            --text: #e8e8f0;
+            --text2: #9898b0;
+            --text3: #5a5a70;
+            --accent: #7c6af7;
+            --accent2: #a394ff;
+            --accent3: #5546e8;
+            --green: #22d3a0;
+            --yellow: #f5c842;
+            --red: #f06478;
+            --code-bg: #0d0d14;
+            --sidebar-w: 260px;
+            --nav-h: 64px;
+        }
+
+        [data-theme="light"] {
+            --bg: #f8f8fc;
+            --bg2: #ffffff;
+            --bg3: #f0f0f8;
+            --bg4: #e8e8f4;
+            --border: rgba(0,0,0,0.08);
+            --border2: rgba(0,0,0,0.14);
+            --text: #14141e;
+            --text2: #4a4a62;
+            --text3: #8888a8;
+            --accent: #5546e8;
+            --accent2: #7c6af7;
+            --accent3: #3d2fd4;
+            --code-bg: #14141e;
+            --green: #0da97c;
+            --yellow: #c4960e;
+            --red: #d43555;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Instrument Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            transition: background 0.25s ease, color 0.25s ease;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 99px; }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--nav-h);
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            display: flex; align-items: center;
+            padding: 0 28px;
+            gap: 0;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: background 0.25s;
+        }
+
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+            margin-right: 32px;
+        }
+        .nav-logo-icon {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--accent3));
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 14px; font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .nav-logo-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 17px; font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.3px;
+        }
+
+        .nav-links {
+            display: flex; align-items: center; gap: 2px;
+            flex: 1;
+        }
+        .nav-links a {
+            display: flex; align-items: center; gap: 7px;
+            padding: 7px 12px;
+            border-radius: 7px;
+            font-size: 13.5px; font-weight: 500;
+            color: var(--text2);
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+        .nav-links a:hover {
+            color: var(--text);
+            background: var(--bg3);
+        }
+        .nav-links a svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+        .nav-right {
+            display: flex; align-items: center; gap: 8px;
+            margin-left: auto;
+        }
+
+        .version-badge {
+            padding: 3px 10px;
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            border-radius: 99px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text2);
+        }
+
+        .theme-btn {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border2);
+            background: var(--bg3);
+            color: var(--text2);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s;
+        }
+        .theme-btn:hover { color: var(--text); background: var(--bg4); }
+        .theme-btn svg { width: 16px; height: 16px; }
+
+        .github-btn {
+            display: flex; align-items: center; gap: 7px;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border2);
+            background: var(--bg3);
+            color: var(--text);
+            font-size: 13px; font-weight: 500;
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+        .github-btn:hover { background: var(--bg4); border-color: var(--accent); }
+        .github-btn svg { width: 15px; height: 15px; }
+
+        /* ── LAYOUT ── */
+        .layout {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: var(--nav-h);
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: var(--sidebar-w);
+            flex-shrink: 0;
+            position: fixed;
+            top: var(--nav-h);
+            left: max(0px, calc((100vw - 1400px) / 2));
+            height: calc(100vh - var(--nav-h));
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            scrollbar-width: thin;
+        }
+
+        .sidebar-section-title {
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text3);
+            padding: 0 8px;
+            margin-bottom: 6px;
+            margin-top: 20px;
+        }
+        .sidebar-section-title:first-child { margin-top: 0; }
+
+        .sidebar a {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 10px;
+            border-radius: 7px;
+            font-size: 13.5px; font-weight: 500;
+            color: var(--text2);
+            text-decoration: none;
+            transition: all 0.15s;
+            margin-bottom: 1px;
+        }
+        .sidebar a:hover { color: var(--text); background: var(--bg3); }
+        .sidebar a.active { color: var(--accent2); background: rgba(124,106,247,0.1); }
+        .sidebar a svg { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
+
+        /* ── MAIN ── */
+        .main {
+            flex: 1;
+            margin-left: var(--sidebar-w);
+            max-width: calc(1400px - var(--sidebar-w));
+        }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 80px 64px 72px;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -120px; left: -80px;
+            width: 500px; height: 500px;
+            background: radial-gradient(ellipse, rgba(124,106,247,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; right: -40px;
+            width: 400px; height: 400px;
+            background: radial-gradient(ellipse, rgba(34,211,160,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 5px 12px 5px 8px;
+            background: rgba(124,106,247,0.1);
+            border: 1px solid rgba(124,106,247,0.25);
+            border-radius: 99px;
+            font-size: 12px; font-weight: 600;
+            color: var(--accent2);
+            margin-bottom: 24px;
+        }
+        .hero-eyebrow-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent2);
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(36px, 5vw, 60px);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent2) 0%, var(--green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-desc {
+            font-size: 16.5px;
+            color: var(--text2);
+            max-width: 560px;
+            margin-bottom: 36px;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 52px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 11px 22px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 14px; font-weight: 600;
+            border-radius: 9px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid var(--accent);
+        }
+        .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(124,106,247,0.3); }
+        .btn-primary svg { width: 15px; height: 15px; }
+
+        .btn-secondary {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 11px 22px;
+            background: var(--bg3);
+            color: var(--text);
+            font-size: 14px; font-weight: 600;
+            border-radius: 9px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid var(--border2);
+        }
+        .btn-secondary:hover { background: var(--bg4); transform: translateY(-1px); }
+        .btn-secondary svg { width: 15px; height: 15px; }
+
+        .hero-stats {
+            display: flex; align-items: center; gap: 32px;
+            flex-wrap: wrap;
+        }
+        .stat {
+            display: flex; flex-direction: column; gap: 3px;
+        }
+        .stat-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px; font-weight: 800;
+            color: var(--text);
+        }
+        .stat-label { font-size: 12px; color: var(--text3); font-weight: 500; }
+        .stat-divider { width: 1px; height: 36px; background: var(--border2); }
+
+        /* ── CODE WINDOW ── */
+        .code-window {
+            background: var(--code-bg);
+            border: 1px solid var(--border2);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 48px;
+        }
+        .code-window-bar {
+            display: flex; align-items: center;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border);
+            gap: 8px;
+        }
+        .dot { width: 11px; height: 11px; border-radius: 50%; }
+        .dot-r { background: #f06478; }
+        .dot-y { background: #f5c842; }
+        .dot-g { background: #22d3a0; }
+        .code-file {
+            margin-left: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text3);
+        }
+        .code-window pre {
+            padding: 24px 28px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13.5px;
+            line-height: 1.75;
+        }
+
+        /* ── CONTENT SECTIONS ── */
+        .content {
+            padding: 56px 64px;
+        }
+
+        section[id] { scroll-margin-top: calc(var(--nav-h) + 24px); }
+
+        .doc-section {
+            margin-bottom: 64px;
+        }
+
+        .section-label {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--accent2);
+            margin-bottom: 12px;
+        }
+        .section-label svg { width: 13px; height: 13px; }
+
+        h2.doc-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 28px; font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+
+        h3.doc-subtitle {
+            font-family: 'Syne', sans-serif;
+            font-size: 18px; font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        h3.doc-subtitle::before {
+            content: '';
+            display: inline-block;
+            width: 3px; height: 18px;
+            background: linear-gradient(180deg, var(--accent), var(--green));
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .doc-p {
+            color: var(--text2);
+            font-size: 15px;
+            line-height: 1.75;
+            margin-bottom: 16px;
+            max-width: 680px;
+        }
+
+        hr.doc-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin-bottom: 64px;
+        }
+
+        /* ── CODE BLOCKS ── */
+        .codeblock {
+            position: relative;
+            background: var(--code-bg);
+            border: 1px solid var(--border2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        .codeblock-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 9px 16px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+        }
+        .codeblock-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text3);
+            font-weight: 500;
+        }
+        .copy-btn {
+            display: flex; align-items: center; gap: 5px;
+            padding: 4px 10px;
+            background: var(--bg4);
+            border: 1px solid var(--border2);
+            border-radius: 5px;
+            font-size: 11px; font-weight: 600;
+            color: var(--text2);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: 'Instrument Sans', sans-serif;
+        }
+        .copy-btn:hover { color: var(--text); background: var(--bg3); }
+        .copy-btn svg { width: 12px; height: 12px; }
+        .codeblock pre {
+            padding: 20px 22px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* ── SYNTAX HIGHLIGHTING ── */
+        .kw { color: #a394ff; font-weight: 600; }
+        .builtin { color: #22d3a0; }
+        .str { color: #86e89a; }
+        .num { color: #f5c842; }
+        .comment { color: #4a4a70; font-style: italic; }
+        .op { color: #f06478; }
+        .var { color: #e8e8f0; }
+        .punc { color: #5a5a80; }
+
+        /* ── SYNTAX GRID ── */
+        .syntax-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .syntax-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .syntax-card:hover {
+            border-color: rgba(124,106,247,0.3);
+            box-shadow: 0 0 0 1px rgba(124,106,247,0.1), 0 4px 16px rgba(0,0,0,0.2);
+        }
+        .syntax-card-header {
+            display: flex; align-items: center; gap: 9px;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        .syntax-card-icon {
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            background: rgba(124,106,247,0.12);
+            border: 1px solid rgba(124,106,247,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent2);
+            flex-shrink: 0;
+        }
+        .syntax-card-icon svg { width: 14px; height: 14px; }
+        .syntax-card-title {
+            font-size: 13px; font-weight: 700;
+            color: var(--text);
+        }
+        .syntax-card-keyword {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent2);
+            background: rgba(124,106,247,0.1);
+            padding: 2px 7px;
+            border-radius: 4px;
+        }
+        .syntax-card-body {
+            padding: 12px 14px;
+        }
+        .syntax-card-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--text2);
+        }
+
+        /* ── KEYWORD TABLE ── */
+        .kw-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 13.5px;
+        }
+        .kw-table thead th {
+            text-align: left;
+            padding: 10px 16px;
+            font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            color: var(--text3);
+            border-bottom: 1px solid var(--border);
+        }
+        .kw-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+        .kw-table tbody tr:last-child { border-bottom: none; }
+        .kw-table tbody tr:hover { background: var(--bg3); }
+        .kw-table td { padding: 11px 16px; color: var(--text2); }
+        .kw-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent2); font-weight: 600; }
+        .kw-table td:nth-child(2) { color: var(--text3); }
+
+        /* ── FEATURES GRID ── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .feature-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            transition: all 0.2s;
+        }
+        .feature-card:hover {
+            border-color: rgba(124,106,247,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .feature-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: rgba(124,106,247,0.1);
+            border: 1px solid rgba(124,106,247,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent2);
+            margin-bottom: 16px;
+        }
+        .feature-icon svg { width: 18px; height: 18px; }
+        .feature-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 15px; font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .feature-desc { font-size: 13.5px; color: var(--text2); line-height: 1.65; }
+
+        /* ── CLI TABLE ── */
+        .cli-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+        .cli-item {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 22px;
+            display: flex; align-items: flex-start; gap: 16px;
+        }
+        .cli-icon {
+            width: 36px; height: 36px; flex-shrink: 0;
+            background: rgba(34,211,160,0.08);
+            border: 1px solid rgba(34,211,160,0.15);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--green);
+        }
+        .cli-icon svg { width: 16px; height: 16px; }
+        .cli-cmd { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--green); margin-bottom: 5px; }
+        .cli-desc { font-size: 13.5px; color: var(--text2); }
+
+        /* ── INSTALL STEP ── */
+        .install-steps { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+        .install-step {
+            display: flex; align-items: flex-start; gap: 16px;
+        }
+        .step-num {
+            width: 30px; height: 30px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--accent), var(--accent3));
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800;
+            color: #fff;
+            font-family: 'Syne', sans-serif;
+        }
+        .step-content { flex: 1; }
+        .step-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+
+        /* ── ROADMAP ── */
+        .roadmap-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+        .roadmap-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 18px;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+        }
+        .roadmap-item.done { border-color: rgba(34,211,160,0.2); background: rgba(34,211,160,0.03); }
+        .roadmap-status { width: 20px; height: 20px; flex-shrink: 0; }
+        .roadmap-text { font-size: 14px; font-weight: 500; color: var(--text2); }
+        .roadmap-item.done .roadmap-text { color: var(--text); }
+        .roadmap-badge {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            color: var(--green);
+            background: rgba(34,211,160,0.1);
+            border: 1px solid rgba(34,211,160,0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* ── CALLOUT ── */
+        .callout {
+            display: flex; gap: 14px;
+            padding: 16px 18px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .callout-info { background: rgba(124,106,247,0.07); border: 1px solid rgba(124,106,247,0.2); }
+        .callout-tip { background: rgba(34,211,160,0.07); border: 1px solid rgba(34,211,160,0.2); }
+        .callout-icon { flex-shrink: 0; margin-top: 1px; }
+        .callout-icon svg { width: 18px; height: 18px; }
+        .callout-info .callout-icon { color: var(--accent2); }
+        .callout-tip .callout-icon { color: var(--green); }
+        .callout-content { font-size: 14px; color: var(--text2); line-height: 1.7; }
+        .callout-content strong { color: var(--text); font-weight: 600; }
+
+        /* ── MOBILE MENU ── */
+        .hamburger {
+            display: none;
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border2);
+            background: var(--bg3);
+            cursor: pointer;
+            align-items: center; justify-content: center;
+            color: var(--text2);
+            transition: all 0.15s;
+        }
+        .hamburger svg { width: 18px; height: 18px; }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-left: var(--sidebar-w);
+        }
+        .footer-left { display: flex; align-items: center; gap: 12px; }
+        .footer-text { font-size: 13px; color: var(--text3); }
+        .footer-links { display: flex; gap: 16px; }
+        .footer-links a { font-size: 13px; color: var(--text3); text-decoration: none; transition: color 0.15s; }
+        .footer-links a:hover { color: var(--text2); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; max-width: 100%; }
+            .content { padding: 40px 24px; }
+            .hero { padding: 48px 24px; }
+            footer { margin-left: 0; padding: 32px 24px; }
+            .hamburger { display: flex; }
+            .nav-links { display: none; }
+            .hero h1 { font-size: 32px; }
+        }
+
+        /* ── INLINE CODE ── */
+        code:not(pre code) {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88em;
+            color: var(--accent2);
+            background: rgba(124,106,247,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* ── MOBILE DRAWER ── */
+        .mobile-drawer {
+            display: none;
+            position: fixed; inset: 0;
+            z-index: 200;
+        }
+        .mobile-drawer.open { display: block; }
+        .drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+        .drawer-panel {
+            position: absolute; top: 0; left: 0; bottom: 0;
+            width: 280px;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            padding: 24px 16px;
+            overflow-y: auto;
+            z-index: 1;
+        }
+        .drawer-close { margin-bottom: 16px; }
+
+        /* ── SYSTEM SUPPORT ── */
+        .os-badges { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+        .os-badge {
+            display: flex; align-items: center; gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg3);
+            border: 1px solid var(--border2);
+            border-radius: 7px;
+            font-size: 12.5px; font-weight: 600;
+            color: var(--text2);
+        }
+        .os-badge svg { width: 14px; height: 14px; }
+        .os-badge.supported { border-color: rgba(34,211,160,0.3); color: var(--green); background: rgba(34,211,160,0.06); }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+    <a href="#hero" class="nav-logo">
+        <div class="nav-logo-icon" style="background: transparent;"><img src="NavLogo.png" alt="" style="width: 90px; height: 90px; object-fit: contain;"></div>
+    </a>
+
+    <div class="nav-links">
+        <a href="#about">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            About
         </a>
-      </div>
-      <div class="md:hidden">
-        <button id="mobile-menu-btn" class="p-2 text-gray-600 flex items-center justify-center rounded-md hover:bg-gray-100">
-          <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
-      </div>
+        <a href="#installation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Install
+        </a>
+        <a href="#syntax">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Syntax
+        </a>
+        <a href="#examples">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            Examples
+        </a>
+        <a href="#cli">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            CLI
+        </a>
+        <a href="#features">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Features
+        </a>
     </div>
-  </div>
-  
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden absolute top-16 left-0 w-full bg-white border-b border-gray-200 shadow-lg pb-4 px-4 space-y-2">
-      <a href="#hero" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-50">Home</a>
-      <a href="#about" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-50">Docs</a>
-      <a href="#syntax" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-50">Syntax</a>
-      <a href="#examples" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-50">Examples</a>
-      <a href="#cli" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-50">CLI</a>
-  </div>
+
+    <div class="nav-right">
+        <span class="version-badge">v6.0</span>
+        <button class="theme-btn" id="theme-toggle" title="Toggle theme">
+            <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </button>
+        <a href="https://github.com/ompandey07/Nelang" target="_blank" class="github-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+        </a>
+        <button class="hamburger" id="hamburger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+    </div>
 </nav>
 
-<!-- Hero Section -->
-<section id="hero" class="pt-32 pb-24 bg-gray-50/50 border-b border-gray-100 relative overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <img src="Logo.png" alt="NeLang Logo Large" class="w-24 h-24 mx-auto mb-8 object-contain drop-shadow-sm">
-        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 mb-6">NeLang Programming Language</h1>
-        <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">Python-like syntax. Nepali-inspired logic. A modern approach to programming combining speed, simplicity, and cultural semantics into an open-source interpreter.</p>
-        
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <a href="#installation" class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-sm gap-2">
-                Get Started <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
-            <a href="#syntax" class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors shadow-sm gap-2">
-                <i data-lucide="code-2" class="w-4 h-4"></i> View Syntax
-            </a>
+<!-- ── MOBILE DRAWER ── -->
+<div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <div class="drawer-panel">
+        <div class="drawer-close">
+            <button class="theme-btn" id="drawer-close-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
         </div>
-        
-        <div class="max-w-2xl mx-auto bg-[#1d1f21] rounded-xl shadow-2xl overflow-hidden text-left border border-gray-800/60 ring-1 ring-white/10">
-            <div class="flex items-center px-4 py-3 bg-[#2d2f31]">
-                <div class="flex gap-2">
-                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
-                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
-                </div>
-                <div class="ml-4 text-sm font-mono text-gray-400">main.nl</div>
-            </div>
-            <div class="p-6 overflow-x-auto">
-<pre class="!bg-transparent !m-0 !p-0"><code class="language-nelang">karya main():
-    name = lina("Enter your name: ")
-    
-    yadi name != "":
-        lekha("Namaste", name)
-    tyasovaye:
-        lekha("Hello World")
-
-main()</code></pre>
-            </div>
-        </div>
+        <div id="drawer-nav-content"></div>
     </div>
-    
-    <!-- Decorative background elements -->
-    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-brand-50 blur-3xl opacity-50"></div>
-        <div class="absolute top-48 -left-24 w-72 h-72 rounded-full bg-blue-50 blur-3xl opacity-50"></div>
-    </div>
-</section>
+</div>
 
-<!-- Main Container -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-start gap-12 relative">
-    
-    <!-- Sidebar Desktop -->
-    <aside class="hidden lg:block w-56 xl:w-64 flex-shrink-0 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto py-8 pr-6 border-r border-gray-100 sidebar-scroll">
-        <nav class="space-y-1 text-sm pb-10">
-            <p class="px-2 text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">Getting Started</p>
-            <a href="#about" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">About NeLang</a>
-            <a href="#installation" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Installation / Usage</a>
-            
-            <p class="px-2 text-xs font-bold text-gray-900 uppercase tracking-widest mt-8 mb-3">Core Syntax</p>
-            <a href="#syntax" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Overview</a>
-            <a href="#syntax-variables" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Variables</a>
-            <a href="#syntax-print" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Print</a>
-            <a href="#syntax-conditionals" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Conditionals</a>
-            <a href="#syntax-loops" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Loops</a>
-            <a href="#syntax-functions" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Functions</a>
-            <a href="#syntax-return" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Return</a>
-            <a href="#syntax-boolean" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Boolean</a>
-            <a href="#syntax-logical" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Logical</a>
-            <a href="#syntax-lists" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Lists</a>
-            <a href="#syntax-for" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">For Loop</a>
-            <a href="#syntax-input" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Input</a>
-            <a href="#syntax-comments" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Comments</a>
+<!-- ── LAYOUT ── -->
+<div class="layout">
 
-            <p class="px-2 text-xs font-bold text-gray-900 uppercase tracking-widest mt-8 mb-3">Reference</p>
-            <a href="#examples" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Code Examples</a>
-            <a href="#cli" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">CLI Commands</a>
-            <a href="#features" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Features</a>
-            <a href="#roadmap" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Roadmap</a>
-        </nav>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <p class="sidebar-section-title">Getting Started</p>
+        <a href="#about" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            About NeLang
+        </a>
+        <a href="#installation" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Installation
+        </a>
+        <a href="#system-support" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            System Support
+        </a>
+
+        <p class="sidebar-section-title">Core Syntax</p>
+        <a href="#syntax-keywords" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h8"/></svg>
+            Keywords Reference
+        </a>
+        <a href="#syntax-variables" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            Variables
+        </a>
+        <a href="#syntax-print" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print / Output
+        </a>
+        <a href="#syntax-conditionals" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M21 3l-7 7"/><path d="M8 21H3v-5"/><path d="M3 21l7-7"/></svg>
+            Conditionals
+        </a>
+        <a href="#syntax-loops" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+            Loops
+        </a>
+        <a href="#syntax-functions" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Functions
+        </a>
+        <a href="#syntax-data" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            Data & Types
+        </a>
+        <a href="#syntax-input" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Input
+        </a>
+
+        <p class="sidebar-section-title">Reference</p>
+        <a href="#examples" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            Code Examples
+        </a>
+        <a href="#cli" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            CLI Commands
+        </a>
+        <a href="#features" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Features
+        </a>
+        <a href="#roadmap" class="sidebar-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            Roadmap
+        </a>
     </aside>
 
-    <!-- Content -->
-    <main class="flex-1 py-12 w-full min-w-0 max-w-4xl">
-        
-        <!-- About -->
-        <section id="about" class="mb-20">
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 tracking-tight">About NeLang</h2>
-            <div class="prose prose-brand max-w-none text-gray-600 space-y-4">
-                <p>NeLang is an open-source programming language utilizing Native Nepali keywords structurally mapped atop a lightning-fast Python Machine Bytecode compiler engine. It embraces Python's beautiful indentation-based formatting rules while injecting localized cultural terminologies.</p>
-                <p><strong>Key Philosophy</strong>: Programming logic is universal, but syntax should feel close to home. NeLang exists to bridge modern language capabilities to Nepali syntax readers—perfect for localized logic mapping, education, and general-purpose development applications.</p>
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- ── HERO ── -->
+        <section id="hero" class="hero">
+            <div class="hero-eyebrow">
+                <span class="hero-eyebrow-dot"></span>
+                Open Source · v6.0 Stable
             </div>
-        </section>
-
-        <hr class="border-gray-100 mb-16">
-
-        <!-- Installation -->
-        <section id="installation" class="mb-20">
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 tracking-tight">Installation / Usage</h2>
-            <p class="text-gray-600 mb-6">Install the compiled wheel from the source and execute your `.nl` files securely via the global NeLang executable hook.</p>
-            
-            <div class="bg-[#1d1f21] rounded-lg p-5 shadow-sm text-sm font-mono mb-6">
-<pre class="!m-0 !p-0"><code class="language-bash text-gray-300">pip install nelang</code></pre>
+            <h1>Code in the<br><span>Language of Nepal</span></h1>
+            <p class="hero-desc">NeLang is an open-source programming language with Nepali-inspired keywords, Python-like syntax, and a lightweight bytecode interpreter. Built for education, localization, and cultural accessibility.</p>
+            <div class="hero-actions">
+                <a href="#installation" class="btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Get Started
+                </a>
+                <a href="#syntax" class="btn-secondary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    Browse Syntax
+                </a>
+                <a href="https://github.com/ompandey07/Nelang" target="_blank" class="btn-secondary">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                    View on GitHub
+                </a>
             </div>
-            
-            <p class="text-gray-600 mb-4 font-medium">To run a script simply execute:</p>
-            <div class="bg-[#1d1f21] rounded-lg p-5 shadow-sm text-sm font-mono">
-<pre class="!m-0 !p-0"><code class="language-bash text-gray-300">nelang run filename.nl</code></pre>
-            </div>
-        </section>
 
-        <hr class="border-gray-100 mb-16">
-
-        <!-- Core Syntax -->
-        <section id="syntax" class="mb-20">
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-10 tracking-tight">Core Syntax</h2>
-            <p class="text-gray-600 mb-10 text-lg">NeLang embraces robust mapping over explicit data states. Every example executes natively across standard compilers.</p>
-
-            <div class="space-y-16">
-                
-                <!-- Variables -->
-                <div id="syntax-variables">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Variables</h3>
-                    <p class="text-gray-600 mb-4">Dynamically instantiated identical to Python standard conventions.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">x = 10</code></pre></div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-num">14+</span>
+                    <span class="stat-label">Keywords</span>
                 </div>
-
-                <!-- Print -->
-                <div id="syntax-print">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Print</h3>
-                    <p class="text-gray-600 mb-4">Outputs strictly to conventional `stdout` standard streams.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">lekha("Hello")</code></pre></div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-num">v6.0</span>
+                    <span class="stat-label">Latest Stable</span>
                 </div>
-
-                <!-- Conditionals -->
-                <div id="syntax-conditionals">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Conditionals</h3>
-                    <p class="text-gray-600 mb-4">Evaluate blocks natively evaluating against booleans.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">yadi x > 5:
-    lekha("Thulo")
-tyasovaye:
-    lekha("Sano")</code></pre></div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-num">pip</span>
+                    <span class="stat-label">Install Method</span>
                 </div>
-
-                <!-- Loops -->
-                <div id="syntax-loops">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Loops</h3>
-                    <p class="text-gray-600 mb-4">Continuous iterative boundaries mapped to condition states.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">jaba x < 5:
-    lekha(x)</code></pre></div>
-                </div>
-
-                <!-- Functions -->
-                <div id="syntax-functions">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Functions</h3>
-                    <p class="text-gray-600 mb-4">Spawn isolated executing closures explicitly mapping parameters environments.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">karya greet():
-    lekha("Namaste")</code></pre></div>
-                </div>
-
-                <!-- Return -->
-                <div id="syntax-return">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Return</h3>
-                    <p class="text-gray-600 mb-4">Escapes active functional closures resolving an expression to its root caller.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">firta value</code></pre></div>
-                </div>
-
-                <!-- Boolean -->
-                <div id="syntax-boolean">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Boolean</h3>
-                    <p class="text-gray-600 mb-4">Literal semantic truth states.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">satya, jhuto</code></pre></div>
-                </div>
-
-                <!-- Logical -->
-                <div id="syntax-logical">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Logical</h3>
-                    <p class="text-gray-600 mb-4">Boolean mapping operators natively supporting AST chained sequences.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">ra, wa, hoina</code></pre></div>
-                </div>
-
-                <!-- Lists -->
-                <div id="syntax-lists">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Lists</h3>
-                    <p class="text-gray-600 mb-4">Standardized structural storage parsing.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">nums = [1, 2, 3]</code></pre></div>
-                </div>
-
-                <!-- For Loop -->
-                <div id="syntax-for">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">For Loop</h3>
-                    <p class="text-gray-600 mb-4">Traverse iterable sets tracking object yields block by block.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">lagi x vitra nums:
-    lekha(x)</code></pre></div>
-                </div>
-
-                <!-- Input -->
-                <div id="syntax-input">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Input</h3>
-                    <p class="text-gray-600 mb-4">Blocks the execution thread polling raw OS standard inputs parsing user strings.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">name = lina("Enter name: ")</code></pre></div>
-                </div>
-
-                <!-- Comments -->
-                <div id="syntax-comments">
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Comments</h3>
-                    <p class="text-gray-600 mb-4">Lexer escapes strictly ignored throughout structural runtime.</p>
-                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang"># yo comment ho</code></pre></div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-num">.nl</span>
+                    <span class="stat-label">File Extension</span>
                 </div>
             </div>
-        </section>
 
-        <hr class="border-gray-100 mb-16">
-
-        <!-- Code Examples -->
-        <section id="examples" class="mb-20">
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">Code Examples</h2>
-            
-            <div class="space-y-8">
-                <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-                    <div class="bg-gray-50 px-5 py-3 border-b border-gray-200 font-semibold text-gray-700">Basic Program</div>
-                    <div class="bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">name = "Sagarmatha"
-lekha("Mount:", name)</code></pre></div>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-                    <div class="bg-gray-50 px-5 py-3 border-b border-gray-200 font-semibold text-gray-700">Loop Program</div>
-                    <div class="bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">nums = [10, 20, 30]
-lagi number vitra nums:
-    lekha("Item:", number)</code></pre></div>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-                    <div class="bg-gray-50 px-5 py-3 border-b border-gray-200 font-semibold text-gray-700">Function Example</div>
-                    <div class="bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">karya multiply(a, b):
-    firta a * b
-
-result = multiply(4, 5)
-lekha(result)</code></pre></div>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-                    <div class="bg-gray-50 px-5 py-3 border-b border-gray-200 font-semibold text-gray-700">Combined Real-world Example</div>
-                    <div class="bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">lyaau math
-
-karya compute_circle_area(radius):
-    yadi radius <= 0:
-        lekha("Invalid radius")
-        firta 0
-    tyasovaye:
-        firta math.pi * math.pow(radius, 2)
-
-r = 5
-lekha("Radius 5 area:", compute_circle_area(r))</code></pre></div>
-                </div>
-            </div>
-        </section>
-
-        <hr class="border-gray-100 mb-16">
-
-        <!-- CLI Commands -->
-        <section id="cli" class="mb-20">
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 tracking-tight">CLI Commands</h2>
-            <p class="text-gray-600 mb-8">NeLang utilizes robust argument subcommands allowing structural metrics output mapping alongside runtime tracing.</p>
-            
-            <div class="grid gap-6">
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
-                    <div class="font-mono font-bold text-gray-900 mb-2">nelang run file.nl</div>
-                    <p class="text-gray-600 text-sm">Compiles `<file>` into AST bounds directly translating code securely into executable backend runtime states. Supports `--debug` modifier.</p>
-                </div>
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
-                    <div class="font-mono font-bold text-gray-900 mb-2">nelang version</div>
-                    <p class="text-gray-600 text-sm">Exposes the locally bounded standard library package integer identifiers mapped to pip setup frameworks.</p>
-                </div>
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
-                    <div class="font-mono font-bold text-gray-900 mb-2">nelang help</div>
-                    <p class="text-gray-600 text-sm">Renders a localized helper text manual natively into your console evaluating available commands securely.</p>
-                </div>
-            </div>
-        </section>
-
-        <hr class="border-gray-100 mb-16">
-
-        <!-- Features -->
-        <section id="features" class="mb-20">
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">Features</h2>
-            <div class="grid sm:grid-cols-2 gap-6">
-                <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-blue-50 text-brand-600 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="languages" class="w-6 h-6"></i>
+            <div style="display: flex; align-items: stretch; gap: 24px; margin-top: 40px; flex-wrap: wrap;">
+                <div class="code-window" style="flex: 1; min-width: 320px; max-width: 600px; margin-top: 0;">
+                    <div class="code-window-bar">
+                        <div class="dot dot-r"></div>
+                        <div class="dot dot-y"></div>
+                        <div class="dot dot-g"></div>
+                        <span class="code-file">main.nl</span>
                     </div>
-                    <h3 class="text-xl font-bold mb-2">Nepali-inspired Keywords</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">Syntax mapped cleanly against translated logical components for cultural clarity and localized precision logic mappings.</p>
+                    <pre><span class="kw">karya</span> <span class="var">main</span><span class="punc">()</span><span class="punc">:</span>
+    <span class="var">name</span> <span class="op">=</span> <span class="builtin">lina</span><span class="punc">(</span><span class="str">"Enter your name: "</span><span class="punc">)</span>
+
+    <span class="kw">yadi</span> <span class="var">name</span> <span class="op">!=</span> <span class="str">""</span><span class="punc">:</span>
+        <span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Namaste"</span><span class="punc">,</span> <span class="var">name</span><span class="punc">)</span>
+    <span class="kw">tyasovaye</span><span class="punc">:</span>
+        <span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Hello World"</span><span class="punc">)</span>
+
+<span class="var">main</span><span class="punc">()</span></pre>
                 </div>
-                <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-blue-50 text-brand-600 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="code" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Python-like Syntax</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">Drop braces and semi-colons implicitly. Maintain visual uniformity through strict structural indentation checks securing readability.</p>
-                </div>
-                <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-blue-50 text-brand-600 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Easy to Learn</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">Built extensively focusing entirely over the simplest AST paths reducing onboarding cognitive load parameters globally.</p>
-                </div>
-                <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-blue-50 text-brand-600 rounded-lg flex items-center justify-center mb-4">
-                        <i data-lucide="zap" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Lightweight Interpreter</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">Zero bloat environment traversing raw token payloads explicitly towards machine native bytecodes skipping intermediary tree walking lag routines entirely.</p>
+                <div style="flex: 1; min-width: 320px; max-width: 600px; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--bg2); border: 1px solid var(--border2);">
+                    <img src="Logo.png" alt="NeLang Logo" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
             </div>
         </section>
 
-        <!-- Roadmap -->
-        <section id="roadmap" class="mb-10">
-            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-8 sm:p-10">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                    <i data-lucide="map" class="w-6 h-6 text-brand-600"></i> Project Roadmap
-                </h2>
-                <ul class="space-y-4">
-                    <li class="flex items-center gap-3 text-gray-700 font-medium"><i data-lucide="circle-dashed" class="w-5 h-5 text-brand-500"></i> Classes and Object Instantiation mapping.</li>
-                    <li class="flex items-center gap-3 text-gray-700 font-medium"><i data-lucide="circle-dashed" class="w-5 h-5 text-brand-500"></i> Extensible module registry definitions paths.</li>
-                    <li class="flex items-center gap-3 text-gray-700 font-medium"><i data-lucide="circle-dashed" class="w-5 h-5 text-brand-500"></i> Official remote Package manager distribution system hooks.</li>
-                    <li class="flex items-center gap-3 text-gray-700 font-medium"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i> VS Code extension syntax coloration mappings [Completed v6.0]</li>
-                </ul>
+        <!-- ── CONTENT ── -->
+        <div class="content">
+
+            <!-- ABOUT -->
+            <section id="about" class="doc-section">
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    Introduction
+                </div>
+                <h2 class="doc-title">About NeLang</h2>
+                <p class="doc-p">NeLang is an open-source programming language that maps native Nepali keywords onto a Python-powered bytecode compiler engine. It preserves Python's clean, indentation-based structure while replacing English keywords with culturally meaningful Nepali equivalents.</p>
+                <p class="doc-p"><strong style="color:var(--text)">Core Philosophy:</strong> Programming logic is universal, but syntax should feel close to home. NeLang lowers the barrier to entry for Nepali-speaking learners and developers by making code read like their native language.</p>
+
+                <div class="callout callout-info">
+                    <span class="callout-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    </span>
+                    <div class="callout-content"><strong>Did you know?</strong> NeLang compiles to Python bytecode under the hood, meaning it's compatible with Python's standard library and runs with the same performance characteristics.</div>
+                </div>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- INSTALLATION -->
+            <section id="installation" class="doc-section">
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Setup
+                </div>
+                <h2 class="doc-title">Installation</h2>
+                <p class="doc-p">Install NeLang globally via pip. Requires Python 3.8 or higher. The installer registers a global <code>nelang</code> command.</p>
+
+                <div class="install-steps">
+                    <div class="install-step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Install via pip</div>
+                            <div class="codeblock">
+                                <div class="codeblock-header">
+                                    <span class="codeblock-lang">bash</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                                        Copy
+                                    </button>
+                                </div>
+                                <pre><span style="color:#22d3a0">pip install nelang</span></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="install-step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Create your first file</div>
+                            <div class="codeblock">
+                                <div class="codeblock-header">
+                                    <span class="codeblock-lang">bash</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                                        Copy
+                                    </button>
+                                </div>
+                                <pre><span style="color:#9898b0">touch</span> hello.nl</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="install-step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Run your script</div>
+                            <div class="codeblock">
+                                <div class="codeblock-header">
+                                    <span class="codeblock-lang">bash</span>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                                        Copy
+                                    </button>
+                                </div>
+                                <pre><span style="color:#22d3a0">nelang</span> run hello.nl</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- SYSTEM SUPPORT -->
+            <section id="system-support" class="doc-section">
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    Compatibility
+                </div>
+                <h2 class="doc-title">System Support</h2>
+                <p class="doc-p">NeLang runs on all major operating systems. Requires Python 3.8+ installed as a dependency.</p>
+
+                <div class="os-badges">
+                    <div class="os-badge supported">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        Windows 10/11
+                    </div>
+                    <div class="os-badge supported">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 2C6.48 2 2 6.48 2 12"/></svg>
+                        macOS 11+
+                    </div>
+                    <div class="os-badge supported">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        Linux (Ubuntu, Debian, Arch)
+                    </div>
+                </div>
+
+                <table class="kw-table" style="margin-top:20px;">
+                    <thead>
+                        <tr><th>Requirement</th><th>Minimum</th><th>Recommended</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Python</td><td style="color:var(--text2)">3.8</td><td style="color:var(--green)">3.11+</td></tr>
+                        <tr><td>pip</td><td style="color:var(--text2)">21.0</td><td style="color:var(--green)">Latest</td></tr>
+                        <tr><td>VS Code Extension</td><td style="color:var(--text2)">Optional</td><td style="color:var(--green)">Recommended</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- SYNTAX KEYWORDS -->
+            <section id="syntax-keywords" class="doc-section">
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h8"/></svg>
+                    Syntax
+                </div>
+                <h2 class="doc-title">Keywords Reference</h2>
+                <p class="doc-p">All NeLang keywords map directly to Python equivalents. The table below shows each keyword, its Python counterpart, and meaning.</p>
+
+                <table class="kw-table">
+                    <thead>
+                        <tr><th>NeLang</th><th>Python</th><th>Meaning</th><th>Category</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>karya</td><td style="color:var(--text2)">def</td><td>function / action</td><td><span style="font-size:11px;color:var(--accent2)">Functions</span></td></tr>
+                        <tr><td>firta</td><td style="color:var(--text2)">return</td><td>return / give back</td><td><span style="font-size:11px;color:var(--accent2)">Functions</span></td></tr>
+                        <tr><td>yadi</td><td style="color:var(--text2)">if</td><td>if / in case</td><td><span style="font-size:11px;color:var(--yellow)">Control Flow</span></td></tr>
+                        <tr><td>tyasovaye</td><td style="color:var(--text2)">else</td><td>otherwise</td><td><span style="font-size:11px;color:var(--yellow)">Control Flow</span></td></tr>
+                        <tr><td>jaba</td><td style="color:var(--text2)">while</td><td>while / as long as</td><td><span style="font-size:11px;color:var(--yellow)">Control Flow</span></td></tr>
+                        <tr><td>lagi</td><td style="color:var(--text2)">for</td><td>for / iterate</td><td><span style="font-size:11px;color:var(--yellow)">Control Flow</span></td></tr>
+                        <tr><td>vitra</td><td style="color:var(--text2)">in</td><td>inside / within</td><td><span style="font-size:11px;color:var(--yellow)">Control Flow</span></td></tr>
+                        <tr><td>lekha</td><td style="color:var(--text2)">print</td><td>write / output</td><td><span style="font-size:11px;color:var(--green)">I/O</span></td></tr>
+                        <tr><td>lina</td><td style="color:var(--text2)">input</td><td>take / receive</td><td><span style="font-size:11px;color:var(--green)">I/O</span></td></tr>
+                        <tr><td>lyaau</td><td style="color:var(--text2)">import</td><td>bring / fetch</td><td><span style="font-size:11px;color:var(--green)">Modules</span></td></tr>
+                        <tr><td>satya</td><td style="color:var(--text2)">True</td><td>true / correct</td><td><span style="font-size:11px;color:var(--red)">Boolean</span></td></tr>
+                        <tr><td>jhuto</td><td style="color:var(--text2)">False</td><td>false / wrong</td><td><span style="font-size:11px;color:var(--red)">Boolean</span></td></tr>
+                        <tr><td>ra</td><td style="color:var(--text2)">and</td><td>and / also</td><td><span style="font-size:11px;color:var(--red)">Logical</span></td></tr>
+                        <tr><td>wa</td><td style="color:var(--text2)">or</td><td>or / either</td><td><span style="font-size:11px;color:var(--red)">Logical</span></td></tr>
+                        <tr><td>hoina</td><td style="color:var(--text2)">not</td><td>not / negative</td><td><span style="font-size:11px;color:var(--red)">Logical</span></td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- SYNTAX SECTIONS -->
+            <section id="syntax-variables" class="doc-section">
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                    Core Syntax
+                </div>
+                <h2 class="doc-title">Variables & Types</h2>
+                <p class="doc-p">Variables in NeLang are dynamically typed — no declaration keyword needed. Assign any value using <code>=</code>. NeLang supports integers, floats, strings, booleans, and lists.</p>
+
+                <div class="syntax-grid">
+                    <div class="syntax-card" id="syntax-variables">
+                        <div class="syntax-card-header">
+                            <div class="syntax-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+                            <span class="syntax-card-title">Variables</span>
+                        </div>
+                        <div class="syntax-card-body">
+                            <div class="syntax-card-code"><span class="var">x</span> <span class="op">=</span> <span class="num">10</span><br><span class="var">name</span> <span class="op">=</span> <span class="str">"Sagarmatha"</span><br><span class="var">pi</span> <span class="op">=</span> <span class="num">3.14</span></div>
+                        </div>
+                    </div>
+                    <div class="syntax-card" id="syntax-print">
+                        <div class="syntax-card-header">
+                            <div class="syntax-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>
+                            <span class="syntax-card-title">Print</span>
+                            <span class="syntax-card-keyword">lekha</span>
+                        </div>
+                        <div class="syntax-card-body">
+                            <div class="syntax-card-code"><span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Hello"</span><span class="punc">)</span><br><span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Val:"</span><span class="punc">,</span> <span class="var">x</span><span class="punc">)</span></div>
+                        </div>
+                    </div>
+                    <div class="syntax-card" id="syntax-input">
+                        <div class="syntax-card-header">
+                            <div class="syntax-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                            <span class="syntax-card-title">Input</span>
+                            <span class="syntax-card-keyword">lina</span>
+                        </div>
+                        <div class="syntax-card-body">
+                            <div class="syntax-card-code"><span class="var">name</span> <span class="op">=</span> <span class="builtin">lina</span><span class="punc">(</span><span class="str">"Enter: "</span><span class="punc">)</span></div>
+                        </div>
+                    </div>
+                    <div class="syntax-card" id="syntax-data">
+                        <div class="syntax-card-header">
+                            <div class="syntax-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></div>
+                            <span class="syntax-card-title">Lists</span>
+                        </div>
+                        <div class="syntax-card-body">
+                            <div class="syntax-card-code"><span class="var">nums</span> <span class="op">=</span> <span class="punc">[</span><span class="num">1</span><span class="punc">,</span> <span class="num">2</span><span class="punc">,</span> <span class="num">3</span><span class="punc">]</span><br><span class="var">items</span> <span class="op">=</span> <span class="punc">[</span><span class="str">"a"</span><span class="punc">,</span> <span class="str">"b"</span><span class="punc">]</span></div>
+                        </div>
+                    </div>
+                    <div class="syntax-card">
+                        <div class="syntax-card-header">
+                            <div class="syntax-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg></div>
+                            <span class="syntax-card-title">Boolean</span>
+                        </div>
+                        <div class="syntax-card-body">
+                            <div class="syntax-card-code"><span class="var">active</span> <span class="op">=</span> <span class="kw">satya</span><br><span class="var">done</span> <span class="op">=</span> <span class="kw">jhuto</span></div>
+                        </div>
+                    </div>
+                    <div class="syntax-card">
+                        <div class="syntax-card-header">
+                            <div class="syntax-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h8"/></svg></div>
+                            <span class="syntax-card-title">Comments</span>
+                        </div>
+                        <div class="syntax-card-body">
+                            <div class="syntax-card-code"><span class="comment"># yo comment ho</span><br><span class="comment"># This is a comment</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- CONDITIONALS -->
+            <section id="syntax-conditionals" class="doc-section">
+                <h3 class="doc-subtitle">Conditionals</h3>
+                <p class="doc-p">Use <code>yadi</code> (if) and <code>tyasovaye</code> (else) to control execution flow. Indentation defines the block scope — no braces needed.</p>
+                <div class="codeblock">
+                    <div class="codeblock-header">
+                        <span class="codeblock-lang">nelang</span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre><span class="var">x</span> <span class="op">=</span> <span class="num">10</span>
+
+<span class="kw">yadi</span> <span class="var">x</span> <span class="op">></span> <span class="num">5</span><span class="punc">:</span>
+    <span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Thulo"</span><span class="punc">)</span>     <span class="comment"># Greater</span>
+<span class="kw">tyasovaye</span><span class="punc">:</span>
+    <span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Sano"</span><span class="punc">)</span>      <span class="comment"># Smaller</span></pre>
+                </div>
+
+                <div class="callout callout-tip" style="margin-top:16px;">
+                    <span class="callout-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                    </span>
+                    <div class="callout-content"><strong>Tip:</strong> Logical operators <code>ra</code> (and), <code>wa</code> (or), and <code>hoina</code> (not) can be chained inside condition expressions.</div>
+                </div>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- LOOPS -->
+            <section id="syntax-loops" class="doc-section">
+                <h3 class="doc-subtitle">Loops</h3>
+                <p class="doc-p">NeLang supports two loop constructs: <code>jaba</code> (while) for condition-based iteration and <code>lagi...vitra</code> (for...in) for traversing lists.</p>
+                <div class="codeblock">
+                    <div class="codeblock-header">
+                        <span class="codeblock-lang">nelang — while loop</span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre><span class="var">x</span> <span class="op">=</span> <span class="num">0</span>
+<span class="kw">jaba</span> <span class="var">x</span> <span class="op"><</span> <span class="num">5</span><span class="punc">:</span>
+    <span class="builtin">lekha</span><span class="punc">(</span><span class="var">x</span><span class="punc">)</span>
+    <span class="var">x</span> <span class="op">=</span> <span class="var">x</span> <span class="op">+</span> <span class="num">1</span></pre>
+                </div>
+                <div class="codeblock" style="margin-top:10px;">
+                    <div class="codeblock-header">
+                        <span class="codeblock-lang">nelang — for loop</span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre><span class="var">nums</span> <span class="op">=</span> <span class="punc">[</span><span class="num">10</span><span class="punc">,</span> <span class="num">20</span><span class="punc">,</span> <span class="num">30</span><span class="punc">]</span>
+<span class="kw">lagi</span> <span class="var">n</span> <span class="kw">vitra</span> <span class="var">nums</span><span class="punc">:</span>
+    <span class="builtin">lekha</span><span class="punc">(</span><span class="var">n</span><span class="punc">)</span></pre>
+                </div>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- FUNCTIONS -->
+            <section id="syntax-functions" class="doc-section">
+                <h3 class="doc-subtitle">Functions</h3>
+                <p class="doc-p">Define reusable blocks using <code>karya</code>. Return values with <code>firta</code>. Functions support parameters and can call each other recursively.</p>
+                <div class="codeblock">
+                    <div class="codeblock-header">
+                        <span class="codeblock-lang">nelang</span>
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                            Copy
+                        </button>
+                    </div>
+                    <pre><span class="kw">karya</span> <span class="var">multiply</span><span class="punc">(</span><span class="var">a</span><span class="punc">,</span> <span class="var">b</span><span class="punc">)</span><span class="punc">:</span>
+    <span class="kw">firta</span> <span class="var">a</span> <span class="op">*</span> <span class="var">b</span>
+
+<span class="var">result</span> <span class="op">=</span> <span class="var">multiply</span><span class="punc">(</span><span class="num">4</span><span class="punc">,</span> <span class="num">5</span><span class="punc">)</span>
+<span class="builtin">lekha</span><span class="punc">(</span><span class="var">result</span><span class="punc">)</span>   <span class="comment"># 20</span></pre>
+                </div>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- EXAMPLES -->
+            <section id="examples" class="doc-section">
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+                    Reference
+                </div>
+                <h2 class="doc-title">Code Examples</h2>
+                <p class="doc-p">Real-world programs demonstrating NeLang's capabilities from beginner to intermediate level.</p>
+
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                    <div>
+                        <p style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;">Hello World</p>
+                        <div class="codeblock">
+                            <div class="codeblock-header"><span class="codeblock-lang">nelang</span><button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy</button></div>
+                            <pre><span class="var">name</span> <span class="op">=</span> <span class="str">"Sagarmatha"</span>
+<span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Mount:"</span><span class="punc">,</span> <span class="var">name</span><span class="punc">)</span></pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;">List Iteration</p>
+                        <div class="codeblock">
+                            <div class="codeblock-header"><span class="codeblock-lang">nelang</span><button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy</button></div>
+                            <pre><span class="var">nums</span> <span class="op">=</span> <span class="punc">[</span><span class="num">10</span><span class="punc">,</span> <span class="num">20</span><span class="punc">,</span> <span class="num">30</span><span class="punc">]</span>
+<span class="kw">lagi</span> <span class="var">number</span> <span class="kw">vitra</span> <span class="var">nums</span><span class="punc">:</span>
+    <span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Item:"</span><span class="punc">,</span> <span class="var">number</span><span class="punc">)</span></pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;">Function with Return</p>
+                        <div class="codeblock">
+                            <div class="codeblock-header"><span class="codeblock-lang">nelang</span><button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy</button></div>
+                            <pre><span class="kw">karya</span> <span class="var">multiply</span><span class="punc">(</span><span class="var">a</span><span class="punc">,</span> <span class="var">b</span><span class="punc">)</span><span class="punc">:</span>
+    <span class="kw">firta</span> <span class="var">a</span> <span class="op">*</span> <span class="var">b</span>
+
+<span class="var">result</span> <span class="op">=</span> <span class="var">multiply</span><span class="punc">(</span><span class="num">4</span><span class="punc">,</span> <span class="num">5</span><span class="punc">)</span>
+<span class="builtin">lekha</span><span class="punc">(</span><span class="var">result</span><span class="punc">)</span></pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;">Real-World: Circle Area with Math Module</p>
+                        <div class="codeblock">
+                            <div class="codeblock-header"><span class="codeblock-lang">nelang</span><button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy</button></div>
+                            <pre><span class="kw">lyaau</span> <span class="var">math</span>
+
+<span class="kw">karya</span> <span class="var">compute_circle_area</span><span class="punc">(</span><span class="var">radius</span><span class="punc">)</span><span class="punc">:</span>
+    <span class="kw">yadi</span> <span class="var">radius</span> <span class="op"><=</span> <span class="num">0</span><span class="punc">:</span>
+        <span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Invalid radius"</span><span class="punc">)</span>
+        <span class="kw">firta</span> <span class="num">0</span>
+    <span class="kw">tyasovaye</span><span class="punc">:</span>
+        <span class="kw">firta</span> <span class="var">math</span><span class="punc">.</span><span class="var">pi</span> <span class="op">*</span> <span class="var">math</span><span class="punc">.</span><span class="var">pow</span><span class="punc">(</span><span class="var">radius</span><span class="punc">,</span> <span class="num">2</span><span class="punc">)</span>
+
+<span class="var">r</span> <span class="op">=</span> <span class="num">5</span>
+<span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Area:"</span><span class="punc">,</span> <span class="var">compute_circle_area</span><span class="punc">(</span><span class="var">r</span><span class="punc">))</span></pre>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;">Interactive: Name Greeter</p>
+                        <div class="codeblock">
+                            <div class="codeblock-header"><span class="codeblock-lang">nelang</span><button class="copy-btn" onclick="copyCode(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy</button></div>
+                            <pre><span class="kw">karya</span> <span class="var">greet</span><span class="punc">()</span><span class="punc">:</span>
+    <span class="var">name</span> <span class="op">=</span> <span class="builtin">lina</span><span class="punc">(</span><span class="str">"Tapai ko naam ke ho? "</span><span class="punc">)</span>
+    <span class="kw">yadi</span> <span class="var">name</span> <span class="op">!=</span> <span class="str">""</span><span class="punc">:</span>
+        <span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Namaste,"</span><span class="punc">,</span> <span class="var">name</span><span class="punc">)</span>
+    <span class="kw">tyasovaye</span><span class="punc">:</span>
+        <span class="builtin">lekha</span><span class="punc">(</span><span class="str">"Yo naam ho?"</span><span class="punc">)</span>
+
+<span class="var">greet</span><span class="punc">()</span></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- CLI -->
+            <section id="cli" class="doc-section">
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                    Terminal
+                </div>
+                <h2 class="doc-title">CLI Commands</h2>
+                <p class="doc-p">NeLang's CLI provides a clean interface for running scripts, inspecting version info, and debugging output.</p>
+
+                <div class="cli-list">
+                    <div class="cli-item">
+                        <div class="cli-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+                        <div>
+                            <div class="cli-cmd">nelang run &lt;file.nl&gt;</div>
+                            <div class="cli-desc">Compiles and executes a <code>.nl</code> source file. Supports the <code>--debug</code> flag to print AST nodes and intermediate token stream.</div>
+                        </div>
+                    </div>
+                    <div class="cli-item">
+                        <div class="cli-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+                        <div>
+                            <div class="cli-cmd">nelang run --debug &lt;file.nl&gt;</div>
+                            <div class="cli-desc">Runs the file with debug mode enabled — prints token stream, AST, and runtime trace to stdout.</div>
+                        </div>
+                    </div>
+                    <div class="cli-item">
+                        <div class="cli-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+                        <div>
+                            <div class="cli-cmd">nelang version</div>
+                            <div class="cli-desc">Outputs the installed NeLang version string and build metadata from the pip package manifest.</div>
+                        </div>
+                    </div>
+                    <div class="cli-item">
+                        <div class="cli-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+                        <div>
+                            <div class="cli-cmd">nelang help</div>
+                            <div class="cli-desc">Prints a formatted help manual listing all available subcommands with usage examples.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- FEATURES -->
+            <section id="features" class="doc-section">
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    Capabilities
+                </div>
+                <h2 class="doc-title">Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l6 6"/><path d="M4 14l6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg></div>
+                        <div class="feature-title">Nepali-Inspired Keywords</div>
+                        <div class="feature-desc">Every control structure and builtin maps to a Nepali word, making code naturally readable to Nepali speakers.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+                        <div class="feature-title">Python-like Syntax</div>
+                        <div class="feature-desc">Indentation-based blocks, no semicolons, and familiar structure. If you know Python, you'll feel right at home.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                        <div class="feature-title">Bytecode Compiled</div>
+                        <div class="feature-desc">NeLang compiles directly to Python bytecode — zero tree-walking overhead. Fast execution with no intermediary interpreter lag.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+                        <div class="feature-title">Standard Library Access</div>
+                        <div class="feature-desc">Use <code>lyaau</code> to import any Python standard library module (math, random, os) directly in NeLang scripts.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M12 8v8"/></svg></div>
+                        <div class="feature-title">VS Code Extension</div>
+                        <div class="feature-desc">Syntax highlighting, color themes, and editor support available as a VS Code extension. Shipped in v6.0.</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+                        <div class="feature-title">Education-First Design</div>
+                        <div class="feature-desc">Designed to lower cognitive load for Nepali-speaking learners entering programming for the first time.</div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="doc-divider">
+
+            <!-- ROADMAP -->
+            <section id="roadmap" class="doc-section">
+                <div class="section-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    What's Next
+                </div>
+                <h2 class="doc-title">Roadmap</h2>
+                <p class="doc-p">Upcoming features planned for NeLang's future releases.</p>
+
+                <div class="roadmap-list">
+                    <div class="roadmap-item done">
+                        <svg class="roadmap-status" viewBox="0 0 24 24" fill="none" stroke="#22d3a0" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        <span class="roadmap-text">VS Code Extension with syntax highlighting</span>
+                        <span class="roadmap-badge">v6.0 ✓</span>
+                    </div>
+                    <div class="roadmap-item">
+                        <svg class="roadmap-status" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="4 2"/></svg>
+                        <span class="roadmap-text">Classes and object-oriented programming support</span>
+                    </div>
+                    <div class="roadmap-item">
+                        <svg class="roadmap-status" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="4 2"/></svg>
+                        <span class="roadmap-text">Extensible module registry and package definitions</span>
+                    </div>
+                    <div class="roadmap-item">
+                        <svg class="roadmap-status" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="4 2"/></svg>
+                        <span class="roadmap-text">Official remote package manager (NePak)</span>
+                    </div>
+                    <div class="roadmap-item">
+                        <svg class="roadmap-status" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="4 2"/></svg>
+                        <span class="roadmap-text">Error messages displayed in Nepali language</span>
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- /.content -->
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-left">
+                <div class="nav-logo-icon" style="background: transparent;"><img src="NavLogo.png" alt="" style="width: 90px; height: 90px; object-fit: contain; padding: 0px 15px;"></div>
+                <span class="footer-text">© 2026 NeLang · Developed by <a href="https://www.omkumarpandey.com.np/" target="_blank">Om Pandey</a></span>
             </div>
-        </section>
+            <div class="footer-links">
+                <a href="https://github.com/ompandey07/Nelang" target="_blank">GitHub</a>
+                <a href="#about">Docs</a>
+                <a href="#roadmap">Roadmap</a>
+            </div>
+        </footer>
 
     </main>
 </div>
 
-<!-- Footer -->
-<footer class="bg-white border-t border-gray-200 py-12 mt-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center">
-        <div class="flex items-center gap-2 mb-4">
-            <img src="Logo.png" alt="NeLang Logo Footer" class="w-6 h-6 object-contain grayscale opacity-60">
-        </div>
-        <p class="text-gray-500 text-sm mb-6 max-w-md">The definitive translation architecture bridging global structural programming to localized syntactic readability layers universally.</p>
-        <div class="flex space-x-6 mb-8">
-            <a href="#" class="text-gray-400 hover:text-gray-900 transition"><i data-lucide="github" class="w-5 h-5"></i></a>
-            <a href="#" class="text-gray-400 hover:text-gray-900 transition"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-            <a href="#" class="text-gray-400 hover:text-gray-900 transition"><i data-lucide="book-open" class="w-5 h-5"></i></a>
-        </div>
-        <p class="text-gray-400 text-sm">&copy; 2026 NeLang Developed By Om Pandey. All rights reserved.</p>
-    </div>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 <script>
-    // Prism Definition for NeLang
-    Prism.languages.nelang = {
-        'comment': /#.*/,
-        'string': {
-            pattern: /(["'])(?:(?!\1)[^\\]|\\.)*\1/,
-            greedy: true
-        },
-        'keyword': /\b(yadi|tyasovaye|jaba|lagi|vitra|karya|firta|satya|jhuto|ra|wa|hoina|lyaau)\b/,
-        'builtin': /\b(lekha|lina|rakha)\b/,
-        'number': /\b\d+(?:\.\d+)?\b/,
-        'operator': /[+\-*\/=<>!]+/,
-        'punctuation': /[.,()[\]{}:]/
-    };
+    // ── THEME TOGGLE ──
+    const html = document.documentElement;
+    const sunIcon = document.getElementById('icon-sun');
+    const moonIcon = document.getElementById('icon-moon');
 
-    // Mobile Menu Toggle
-    const btn = document.getElementById('mobile-menu-btn');
-    const menu = document.getElementById('mobile-menu');
-    const mobileLinks = document.querySelectorAll('.mobile-link');
+    function setTheme(theme) {
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem('nelang-theme', theme);
+        if (theme === 'light') {
+            sunIcon.style.display = 'block';
+            moonIcon.style.display = 'none';
+        } else {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        }
+    }
 
-    btn.addEventListener('click', () => {
-        menu.classList.toggle('hidden');
+    // Load saved theme
+    const saved = localStorage.getItem('nelang-theme') || 'dark';
+    setTheme(saved);
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        const current = html.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
     });
 
-    mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            menu.classList.add('hidden');
+    // ── COPY CODE ──
+    function copyCode(btn) {
+        const pre = btn.closest('.codeblock').querySelector('pre');
+        const text = pre.innerText || pre.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Copied!';
+            btn.style.color = 'var(--green)';
+            setTimeout(() => {
+                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy';
+                btn.style.color = '';
+            }, 2000);
         });
+    }
+
+    // ── MOBILE DRAWER ──
+    const drawer = document.getElementById('mobile-drawer');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+    const drawerContent = document.getElementById('drawer-nav-content');
+    const sidebar = document.getElementById('sidebar');
+
+    document.getElementById('hamburger').addEventListener('click', () => {
+        drawerContent.innerHTML = sidebar.innerHTML;
+        drawer.classList.add('open');
+    });
+    document.getElementById('drawer-close-btn').addEventListener('click', () => drawer.classList.remove('open'));
+    drawerOverlay.addEventListener('click', () => drawer.classList.remove('open'));
+
+    // Close drawer on link click
+    drawerContent.addEventListener('click', e => {
+        if (e.target.tagName === 'A') drawer.classList.remove('open');
     });
 
-    // Code Block Copy Button Logic
-    document.addEventListener("DOMContentLoaded", () => {
-        const preBlocks = document.querySelectorAll("main pre");
-        preBlocks.forEach(pre => {
-            pre.classList.add("relative", "group");
-            
-            const copyBtn = document.createElement("button");
-            copyBtn.className = "absolute top-2 right-2 bg-gray-700/80 hover:bg-gray-600 p-1.5 rounded transition opacity-0 group-hover:opacity-100 focus:opacity-100";
-            copyBtn.innerHTML = '<i data-lucide="copy" class="w-4 h-4 text-gray-300"></i>';
-            copyBtn.setAttribute('aria-label', 'Copy code');
-            
-            copyBtn.onclick = () => {
-                const codeNode = pre.querySelector("code");
-                if (codeNode) {
-                    navigator.clipboard.writeText(codeNode.innerText).then(() => {
-                        copyBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-400"></i>';
-                        lucide.createIcons();
-                        setTimeout(() => {
-                            copyBtn.innerHTML = '<i data-lucide="copy" class="w-4 h-4 text-gray-300"></i>';
-                            lucide.createIcons();
-                        }, 2000);
-                    });
-                }
-            };
-            pre.appendChild(copyBtn);
+    // ── SCROLLSPY ──
+    const sections = document.querySelectorAll('section[id]');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + id) link.classList.add('active');
+                });
+            }
         });
+    }, { rootMargin: '0px 0px -60% 0px', threshold: 0.05 });
 
-        // Initialize Icons
-        lucide.createIcons();
-
-        // ScrollSpy logic for Native Sidebar tracking offsets
-        const sections = document.querySelectorAll("main section[id]");
-        const navLinks = document.querySelectorAll(".sidebar-link");
-
-        const observerOptions = {
-            root: null,
-            rootMargin: "0px 0px -60% 0px",
-            threshold: 0.1
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    const id = entry.target.getAttribute("id");
-                    
-                    navLinks.forEach(link => {
-                        link.classList.remove("nav-active");
-                        if(link.getAttribute("href") === `#${id}`) {
-                            link.classList.add("nav-active");
-                            // Ensure the sidebar link is visible
-                            link.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                        }
-                    });
-                }
-            });
-        }, observerOptions);
-
-        sections.forEach(section => observer.observe(section));
-    });
+    sections.forEach(s => observer.observe(s));
 </script>
+<script src="console.js"></script>
 </body>
 </html>

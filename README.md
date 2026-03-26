@@ -1,7 +1,7 @@
 # NeLang
 
 <p align="center">
-  <img src="Logo.png" alt="NeLang Logo" width="200"/>
+  <img src="NavLogo.png" alt="NeLang Logo" width="200"/>
 </p>
 
 > Python-like syntax. Nepali-inspired logic.
