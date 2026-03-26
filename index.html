@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeLang - Nepali Programming Language</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; color: #111827; }
+        code, pre { font-family: 'Fira Code', monospace; }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+        section { scroll-margin-top: 80px; }
+        .nav-active { color: #0284c7 !important; font-weight: 600 !important; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white">
+
+<!-- Navbar -->
+<nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-gray-200 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+      <div class="flex items-center gap-3">
+        <img src="Logo.png" alt="NeLang Logo" class="h-8 w-8 object-contain">
+      </div>
+      <div class="hidden md:flex space-x-8">
+        <a href="#hero" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Home</a>
+        <a href="#about" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Docs</a>
+        <a href="#syntax" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Syntax</a>
+        <a href="#examples" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">Examples</a>
+        <a href="#cli" class="text-sm font-medium text-gray-600 hover:text-brand-600 transition">CLI</a>
+        <a href="https://github.com/ompandey07/Nelang" target="_blank" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition flex items-center gap-1.5">
+          <i data-lucide="github" class="w-4 h-4"></i> GitHub
+        </a>
+      </div>
+      <div class="md:hidden">
+        <button id="mobile-menu-btn" class="p-2 text-gray-600 flex items-center justify-center rounded-md hover:bg-gray-100">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden absolute top-16 left-0 w-full bg-white border-b border-gray-200 shadow-lg pb-4 px-4 space-y-2">
+      <a href="#hero" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-50">Home</a>
+      <a href="#about" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-50">Docs</a>
+      <a href="#syntax" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-50">Syntax</a>
+      <a href="#examples" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-50">Examples</a>
+      <a href="#cli" class="mobile-link block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-50">CLI</a>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="hero" class="pt-32 pb-24 bg-gray-50/50 border-b border-gray-100 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <img src="Logo.png" alt="NeLang Logo Large" class="w-24 h-24 mx-auto mb-8 object-contain drop-shadow-sm">
+        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 mb-6">NeLang Programming Language</h1>
+        <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">Python-like syntax. Nepali-inspired logic. A modern approach to programming combining speed, simplicity, and cultural semantics into an open-source interpreter.</p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <a href="#installation" class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-sm gap-2">
+                Get Started <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            <a href="#syntax" class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors shadow-sm gap-2">
+                <i data-lucide="code-2" class="w-4 h-4"></i> View Syntax
+            </a>
+        </div>
+        
+        <div class="max-w-2xl mx-auto bg-[#1d1f21] rounded-xl shadow-2xl overflow-hidden text-left border border-gray-800/60 ring-1 ring-white/10">
+            <div class="flex items-center px-4 py-3 bg-[#2d2f31]">
+                <div class="flex gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
+                <div class="ml-4 text-sm font-mono text-gray-400">main.nl</div>
+            </div>
+            <div class="p-6 overflow-x-auto">
+<pre class="!bg-transparent !m-0 !p-0"><code class="language-nelang">karya main():
+    name = lina("Enter your name: ")
+    
+    yadi name != "":
+        lekha("Namaste", name)
+    tyasovaye:
+        lekha("Hello World")
+
+main()</code></pre>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Decorative background elements -->
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-brand-50 blur-3xl opacity-50"></div>
+        <div class="absolute top-48 -left-24 w-72 h-72 rounded-full bg-blue-50 blur-3xl opacity-50"></div>
+    </div>
+</section>
+
+<!-- Main Container -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-start gap-12 relative">
+    
+    <!-- Sidebar Desktop -->
+    <aside class="hidden lg:block w-56 xl:w-64 flex-shrink-0 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto py-8 pr-6 border-r border-gray-100 sidebar-scroll">
+        <nav class="space-y-1 text-sm pb-10">
+            <p class="px-2 text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">Getting Started</p>
+            <a href="#about" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">About NeLang</a>
+            <a href="#installation" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Installation / Usage</a>
+            
+            <p class="px-2 text-xs font-bold text-gray-900 uppercase tracking-widest mt-8 mb-3">Core Syntax</p>
+            <a href="#syntax" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Overview</a>
+            <a href="#syntax-variables" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Variables</a>
+            <a href="#syntax-print" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Print</a>
+            <a href="#syntax-conditionals" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Conditionals</a>
+            <a href="#syntax-loops" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Loops</a>
+            <a href="#syntax-functions" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Functions</a>
+            <a href="#syntax-return" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Return</a>
+            <a href="#syntax-boolean" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Boolean</a>
+            <a href="#syntax-logical" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Logical</a>
+            <a href="#syntax-lists" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Lists</a>
+            <a href="#syntax-for" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">For Loop</a>
+            <a href="#syntax-input" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Input</a>
+            <a href="#syntax-comments" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Comments</a>
+
+            <p class="px-2 text-xs font-bold text-gray-900 uppercase tracking-widest mt-8 mb-3">Reference</p>
+            <a href="#examples" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Code Examples</a>
+            <a href="#cli" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">CLI Commands</a>
+            <a href="#features" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Features</a>
+            <a href="#roadmap" class="sidebar-link block px-2 py-1.5 font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50 transition">Roadmap</a>
+        </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="flex-1 py-12 w-full min-w-0 max-w-4xl">
+        
+        <!-- About -->
+        <section id="about" class="mb-20">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 tracking-tight">About NeLang</h2>
+            <div class="prose prose-brand max-w-none text-gray-600 space-y-4">
+                <p>NeLang is an open-source programming language utilizing Native Nepali keywords structurally mapped atop a lightning-fast Python Machine Bytecode compiler engine. It embraces Python's beautiful indentation-based formatting rules while injecting localized cultural terminologies.</p>
+                <p><strong>Key Philosophy</strong>: Programming logic is universal, but syntax should feel close to home. NeLang exists to bridge modern language capabilities to Nepali syntax readers—perfect for localized logic mapping, education, and general-purpose development applications.</p>
+            </div>
+        </section>
+
+        <hr class="border-gray-100 mb-16">
+
+        <!-- Installation -->
+        <section id="installation" class="mb-20">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 tracking-tight">Installation / Usage</h2>
+            <p class="text-gray-600 mb-6">Install the compiled wheel from the source and execute your `.nl` files securely via the global NeLang executable hook.</p>
+            
+            <div class="bg-[#1d1f21] rounded-lg p-5 shadow-sm text-sm font-mono mb-6">
+<pre class="!m-0 !p-0"><code class="language-bash text-gray-300">pip install nelang</code></pre>
+            </div>
+            
+            <p class="text-gray-600 mb-4 font-medium">To run a script simply execute:</p>
+            <div class="bg-[#1d1f21] rounded-lg p-5 shadow-sm text-sm font-mono">
+<pre class="!m-0 !p-0"><code class="language-bash text-gray-300">nelang run filename.nl</code></pre>
+            </div>
+        </section>
+
+        <hr class="border-gray-100 mb-16">
+
+        <!-- Core Syntax -->
+        <section id="syntax" class="mb-20">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-10 tracking-tight">Core Syntax</h2>
+            <p class="text-gray-600 mb-10 text-lg">NeLang embraces robust mapping over explicit data states. Every example executes natively across standard compilers.</p>
+
+            <div class="space-y-16">
+                
+                <!-- Variables -->
+                <div id="syntax-variables">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Variables</h3>
+                    <p class="text-gray-600 mb-4">Dynamically instantiated identical to Python standard conventions.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">x = 10</code></pre></div>
+                </div>
+
+                <!-- Print -->
+                <div id="syntax-print">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Print</h3>
+                    <p class="text-gray-600 mb-4">Outputs strictly to conventional `stdout` standard streams.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">lekha("Hello")</code></pre></div>
+                </div>
+
+                <!-- Conditionals -->
+                <div id="syntax-conditionals">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Conditionals</h3>
+                    <p class="text-gray-600 mb-4">Evaluate blocks natively evaluating against booleans.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">yadi x > 5:
+    lekha("Thulo")
+tyasovaye:
+    lekha("Sano")</code></pre></div>
+                </div>
+
+                <!-- Loops -->
+                <div id="syntax-loops">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Loops</h3>
+                    <p class="text-gray-600 mb-4">Continuous iterative boundaries mapped to condition states.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">jaba x < 5:
+    lekha(x)</code></pre></div>
+                </div>
+
+                <!-- Functions -->
+                <div id="syntax-functions">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Functions</h3>
+                    <p class="text-gray-600 mb-4">Spawn isolated executing closures explicitly mapping parameters environments.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">karya greet():
+    lekha("Namaste")</code></pre></div>
+                </div>
+
+                <!-- Return -->
+                <div id="syntax-return">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Return</h3>
+                    <p class="text-gray-600 mb-4">Escapes active functional closures resolving an expression to its root caller.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">firta value</code></pre></div>
+                </div>
+
+                <!-- Boolean -->
+                <div id="syntax-boolean">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Boolean</h3>
+                    <p class="text-gray-600 mb-4">Literal semantic truth states.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">satya, jhuto</code></pre></div>
+                </div>
+
+                <!-- Logical -->
+                <div id="syntax-logical">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Logical</h3>
+                    <p class="text-gray-600 mb-4">Boolean mapping operators natively supporting AST chained sequences.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">ra, wa, hoina</code></pre></div>
+                </div>
+
+                <!-- Lists -->
+                <div id="syntax-lists">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Lists</h3>
+                    <p class="text-gray-600 mb-4">Standardized structural storage parsing.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">nums = [1, 2, 3]</code></pre></div>
+                </div>
+
+                <!-- For Loop -->
+                <div id="syntax-for">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">For Loop</h3>
+                    <p class="text-gray-600 mb-4">Traverse iterable sets tracking object yields block by block.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">lagi x vitra nums:
+    lekha(x)</code></pre></div>
+                </div>
+
+                <!-- Input -->
+                <div id="syntax-input">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Input</h3>
+                    <p class="text-gray-600 mb-4">Blocks the execution thread polling raw OS standard inputs parsing user strings.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">name = lina("Enter name: ")</code></pre></div>
+                </div>
+
+                <!-- Comments -->
+                <div id="syntax-comments">
+                    <h3 class="text-xl font-bold text-gray-900 mb-3 border-l-4 border-brand-500 pl-3">Comments</h3>
+                    <p class="text-gray-600 mb-4">Lexer escapes strictly ignored throughout structural runtime.</p>
+                    <div class="rounded-lg overflow-hidden bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang"># yo comment ho</code></pre></div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="border-gray-100 mb-16">
+
+        <!-- Code Examples -->
+        <section id="examples" class="mb-20">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">Code Examples</h2>
+            
+            <div class="space-y-8">
+                <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-gray-50 px-5 py-3 border-b border-gray-200 font-semibold text-gray-700">Basic Program</div>
+                    <div class="bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">name = "Sagarmatha"
+lekha("Mount:", name)</code></pre></div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-gray-50 px-5 py-3 border-b border-gray-200 font-semibold text-gray-700">Loop Program</div>
+                    <div class="bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">nums = [10, 20, 30]
+lagi number vitra nums:
+    lekha("Item:", number)</code></pre></div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-gray-50 px-5 py-3 border-b border-gray-200 font-semibold text-gray-700">Function Example</div>
+                    <div class="bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">karya multiply(a, b):
+    firta a * b
+
+result = multiply(4, 5)
+lekha(result)</code></pre></div>
+                </div>
+
+                <div class="border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-gray-50 px-5 py-3 border-b border-gray-200 font-semibold text-gray-700">Combined Real-world Example</div>
+                    <div class="bg-[#1d1f21] text-sm"><pre class="!p-5 !m-0"><code class="language-nelang">lyaau math
+
+karya compute_circle_area(radius):
+    yadi radius <= 0:
+        lekha("Invalid radius")
+        firta 0
+    tyasovaye:
+        firta math.pi * math.pow(radius, 2)
+
+r = 5
+lekha("Radius 5 area:", compute_circle_area(r))</code></pre></div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="border-gray-100 mb-16">
+
+        <!-- CLI Commands -->
+        <section id="cli" class="mb-20">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 tracking-tight">CLI Commands</h2>
+            <p class="text-gray-600 mb-8">NeLang utilizes robust argument subcommands allowing structural metrics output mapping alongside runtime tracing.</p>
+            
+            <div class="grid gap-6">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                    <div class="font-mono font-bold text-gray-900 mb-2">nelang run file.nl</div>
+                    <p class="text-gray-600 text-sm">Compiles `<file>` into AST bounds directly translating code securely into executable backend runtime states. Supports `--debug` modifier.</p>
+                </div>
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                    <div class="font-mono font-bold text-gray-900 mb-2">nelang version</div>
+                    <p class="text-gray-600 text-sm">Exposes the locally bounded standard library package integer identifiers mapped to pip setup frameworks.</p>
+                </div>
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                    <div class="font-mono font-bold text-gray-900 mb-2">nelang help</div>
+                    <p class="text-gray-600 text-sm">Renders a localized helper text manual natively into your console evaluating available commands securely.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="border-gray-100 mb-16">
+
+        <!-- Features -->
+        <section id="features" class="mb-20">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-8 tracking-tight">Features</h2>
+            <div class="grid sm:grid-cols-2 gap-6">
+                <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-50 text-brand-600 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="languages" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Nepali-inspired Keywords</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Syntax mapped cleanly against translated logical components for cultural clarity and localized precision logic mappings.</p>
+                </div>
+                <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-50 text-brand-600 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="code" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Python-like Syntax</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Drop braces and semi-colons implicitly. Maintain visual uniformity through strict structural indentation checks securing readability.</p>
+                </div>
+                <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-50 text-brand-600 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Easy to Learn</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Built extensively focusing entirely over the simplest AST paths reducing onboarding cognitive load parameters globally.</p>
+                </div>
+                <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-50 text-brand-600 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="zap" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Lightweight Interpreter</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Zero bloat environment traversing raw token payloads explicitly towards machine native bytecodes skipping intermediary tree walking lag routines entirely.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap -->
+        <section id="roadmap" class="mb-10">
+            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-8 sm:p-10">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <i data-lucide="map" class="w-6 h-6 text-brand-600"></i> Project Roadmap
+                </h2>
+                <ul class="space-y-4">
+                    <li class="flex items-center gap-3 text-gray-700 font-medium"><i data-lucide="circle-dashed" class="w-5 h-5 text-brand-500"></i> Classes and Object Instantiation mapping.</li>
+                    <li class="flex items-center gap-3 text-gray-700 font-medium"><i data-lucide="circle-dashed" class="w-5 h-5 text-brand-500"></i> Extensible module registry definitions paths.</li>
+                    <li class="flex items-center gap-3 text-gray-700 font-medium"><i data-lucide="circle-dashed" class="w-5 h-5 text-brand-500"></i> Official remote Package manager distribution system hooks.</li>
+                    <li class="flex items-center gap-3 text-gray-700 font-medium"><i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i> VS Code extension syntax coloration mappings [Completed v6.0]</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- Footer -->
+<footer class="bg-white border-t border-gray-200 py-12 mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center">
+        <div class="flex items-center gap-2 mb-4">
+            <img src="Logo.png" alt="NeLang Logo Footer" class="w-6 h-6 object-contain grayscale opacity-60">
+        </div>
+        <p class="text-gray-500 text-sm mb-6 max-w-md">The definitive translation architecture bridging global structural programming to localized syntactic readability layers universally.</p>
+        <div class="flex space-x-6 mb-8">
+            <a href="#" class="text-gray-400 hover:text-gray-900 transition"><i data-lucide="github" class="w-5 h-5"></i></a>
+            <a href="#" class="text-gray-400 hover:text-gray-900 transition"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+            <a href="#" class="text-gray-400 hover:text-gray-900 transition"><i data-lucide="book-open" class="w-5 h-5"></i></a>
+        </div>
+        <p class="text-gray-400 text-sm">&copy; 2026 NeLang Developed By Om Pandey. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script>
+    // Prism Definition for NeLang
+    Prism.languages.nelang = {
+        'comment': /#.*/,
+        'string': {
+            pattern: /(["'])(?:(?!\1)[^\\]|\\.)*\1/,
+            greedy: true
+        },
+        'keyword': /\b(yadi|tyasovaye|jaba|lagi|vitra|karya|firta|satya|jhuto|ra|wa|hoina|lyaau)\b/,
+        'builtin': /\b(lekha|lina|rakha)\b/,
+        'number': /\b\d+(?:\.\d+)?\b/,
+        'operator': /[+\-*\/=<>!]+/,
+        'punctuation': /[.,()[\]{}:]/
+    };
+
+    // Mobile Menu Toggle
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    btn.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+    });
+
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            menu.classList.add('hidden');
+        });
+    });
+
+    // Code Block Copy Button Logic
+    document.addEventListener("DOMContentLoaded", () => {
+        const preBlocks = document.querySelectorAll("main pre");
+        preBlocks.forEach(pre => {
+            pre.classList.add("relative", "group");
+            
+            const copyBtn = document.createElement("button");
+            copyBtn.className = "absolute top-2 right-2 bg-gray-700/80 hover:bg-gray-600 p-1.5 rounded transition opacity-0 group-hover:opacity-100 focus:opacity-100";
+            copyBtn.innerHTML = '<i data-lucide="copy" class="w-4 h-4 text-gray-300"></i>';
+            copyBtn.setAttribute('aria-label', 'Copy code');
+            
+            copyBtn.onclick = () => {
+                const codeNode = pre.querySelector("code");
+                if (codeNode) {
+                    navigator.clipboard.writeText(codeNode.innerText).then(() => {
+                        copyBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-400"></i>';
+                        lucide.createIcons();
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '<i data-lucide="copy" class="w-4 h-4 text-gray-300"></i>';
+                            lucide.createIcons();
+                        }, 2000);
+                    });
+                }
+            };
+            pre.appendChild(copyBtn);
+        });
+
+        // Initialize Icons
+        lucide.createIcons();
+
+        // ScrollSpy logic for Native Sidebar tracking offsets
+        const sections = document.querySelectorAll("main section[id]");
+        const navLinks = document.querySelectorAll(".sidebar-link");
+
+        const observerOptions = {
+            root: null,
+            rootMargin: "0px 0px -60% 0px",
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const id = entry.target.getAttribute("id");
+                    
+                    navLinks.forEach(link => {
+                        link.classList.remove("nav-active");
+                        if(link.getAttribute("href") === `#${id}`) {
+                            link.classList.add("nav-active");
+                            // Ensure the sidebar link is visible
+                            link.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+    });
+</script>
+</body>
+</html>

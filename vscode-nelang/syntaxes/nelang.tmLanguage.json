@@ -1,0 +1,42 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "NeLang",
+  "scopeName": "source.nelang",
+  "patterns": [
+    {
+      "match": "\\b(yadi|tyasovaye|jaba|lagi|vitra|karya|firta|lyaau)\\b",
+      "name": "keyword.control.nelang"
+    },
+    {
+      "match": "\\b(satya|jhuto)\\b",
+      "name": "constant.language.nelang"
+    },
+    {
+      "match": "\\b(ra|wa|hoina)\\b",
+      "name": "keyword.operator.logical.nelang"
+    },
+    {
+      "match": "\\b(lekha|lina|rakha)\\b",
+      "name": "support.function.builtin.nelang"
+    },
+    {
+      "match": "#.*",
+      "name": "comment.line.number-sign.nelang"
+    },
+    {
+      "begin": "\"",
+      "end": "\"",
+      "name": "string.quoted.double.nelang",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.nelang"
+        }
+      ]
+    },
+    {
+      "match": "\\b[0-9]+(\\.[0-9]+)?\\b",
+      "name": "constant.numeric.nelang"
+    }
+  ]
+}

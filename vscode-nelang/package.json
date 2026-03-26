@@ -1,0 +1,30 @@
+{
+  "name": "nelang",
+  "displayName": "NeLang Support",
+  "description": "Syntax highlighting for the NeLang programming language.",
+  "version": "0.1.0",
+  "publisher": "om-pandey",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "nelang",
+        "aliases": ["NeLang", "nelang"],
+        "extensions": [".nl"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "nelang",
+        "scopeName": "source.nelang",
+        "path": "./syntaxes/nelang.tmLanguage.json"
+      }
+    ]
+  }
+}
